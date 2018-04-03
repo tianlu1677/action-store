@@ -81,7 +81,11 @@ module ActionStore
         defined_action = find_defined_action(opts[:action_type], opts[:target_type])
         return false if defined_action.nil?
 
-        action = Action.find_or_create_by(where_opts(opts))
+        if opts[:allow_repeat]
+          action = Action.find_or_create_by(where_opts(opts))
+        else 
+          action = Action.create(where_opts(opts))
+        end  
         if opts[:action_option]
           action.update_attribute(:action_option, opts[:action_option])
         end
